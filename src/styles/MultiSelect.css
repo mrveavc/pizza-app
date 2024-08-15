@@ -1,0 +1,45 @@
+/* src/components/MultiSelect.css */
+.multi-select-component {
+  --ms-bg-color: var(--bg-color);
+  --ms-border-color: var(--border-color);
+  --ms-text-color: var(--text-color);
+  --ms-checkbox-bg: var(--checkbox-bg);
+  --ms-checkbox-border: var(--checkbox-border);
+  --ms-checkbox-checkmark: var(--checkbox-checkmark);
+}
+
+.light {
+  --bg-color: #ffffff;
+  --border-color: #ddd;
+  --text-color: #000;
+  --checkbox-bg: #f5f5f5;
+  --checkbox-border: #ddd;
+  --checkbox-checkmark: #007bff;
+}
+
+.dark {
+  --bg-color: #2c2c2c;
+  --border-color: #444;
+  --text-color: #fff;
+  --checkbox-bg: #444;
+  --checkbox-border: #666;
+  --checkbox-checkmark: #ff5722;
+}
+
+.multi-select-component .dropdown {
+  background-color: var(--ms-bg-color);
+  border: 1px solid var(--ms-border-color);
+}
+
+.multi-select-component .dropdown .dropdown-item {
+  color: var(--ms-text-color);
+}
+
+.multi-select-component .dropdown .checkbox {
+  background-color: var(--ms-checkbox-bg);
+  border: 1px solid var(--ms-checkbox-border);
+}
+
+.multi-select-component .dropdown .checkbox .checkmark {
+  background-color: var(--ms-checkbox-checkmark);
+}

@@ -1,0 +1,133 @@
+
+body {
+    font-family: "Arial", sans-serif;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: #333;
+  }
+  /*product css*/
+  .add-product-button {
+   
+    padding: 15px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 10px;
+    width: -webkit-fill-available;
+  }
+  .products-page {
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .product-card button:hover,
+  .product-card a:hover {
+    opacity: 0.8;
+  }
+  .product-card a {
+    width: -webkit-fill-available;
+    
+  }
+  .product-card .delete-button {
+    width: -webkit-fill-available;
+  
+    margin-top: 5px;
+  }
+  .product-card {
+  
+    padding: 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+  .product-card button,
+  .product-card a {
+    margin-right: 10px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    display: ruby-text;
+    text-decoration: none;
+  }
+  .products-page.light {
+    background-color: white;
+    border-radius: 10px;
+    color: #000;
+  }
+
+  .products-page.dark {
+    background-color: black;
+    border-radius: 10px;
+
+    color: #fff;
+  }
+
+  .products-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+.container {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    text-align: center;
+    color: #333;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  input {
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s ease-in-out;
+    outline: none;
+    color: #333;
+  }
+  
+  input:focus {
+    border-color: #ff8c00; 
+  }
+  
+  button {
+    background-color: #ff8c00; 
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  button:hover {
+    background-color: #ff7f00; 
+  }
+  
