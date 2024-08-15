@@ -1,68 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import React, { useState, useEffect } from "react";
+import { db } from "../firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { MultiSelect } from "react-multi-select-component";
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../contexts/Auth";
+import options from "../options.json"; 
+
 
 function ProductDetail() {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [dough, setDough] = useState('');
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [dough, setDough] = useState("");
   const [toppings, setToppings] = useState([]);
-  const [extra, setExtra] = useState('');
+  const [extra, setExtra] = useState("");
   const [loading, setLoading] = useState(true);
+  const { doughOptions, toppingOptions } = options;
   const navigate = useNavigate();
   const { id } = useParams();
+  const { currentUser } = useAuth();
 
-  const doughOptions = [
-    { label: 'Thin', value: 'thin' },
-    { label: 'Thick', value: 'thick' }
-  ];
 
-  const toppingOptions = [
-    { label: 'Pepperoni', value: 'pepperoni' },
-    { label: 'Mushrooms', value: 'mushrooms' },
-    { label: 'Onions', value: 'onions' }
-  ];
 
   useEffect(() => {
     const fetchProduct = async () => {
-      if (id) {
-        const docRef = doc(db, 'products', id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setName(data.name || '');
-          setPhone(data.phone || '');
-          setDough(data.dough || '');
-          setToppings(data.toppings || []);
-          setExtra(data.extra || '');
-          setLoading(false);
+      if (currentUser && id) {
+        const userDocRef = doc(db, "products", currentUser.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const userProducts = userDoc.data().products || [];
+          const product = userProducts[id];
+          if (product) {
+            setName(product.name || "");
+            setPhone(product.phone || "");
+            setDough(product.dough || "");
+            setToppings(product.toppings || []);
+            setExtra(product.extra || "");
+            setLoading(false);
+          } else {
+            console.error("Ürün bulunamadı.");
+            setLoading(false);
+          }
         }
       }
     };
     fetchProduct();
-  }, [id]);
+  }, [currentUser, id]);
 
   const handleSave = async (e) => {
     e.preventDefault();
-    if (id) {
-      const docRef = doc(db, 'products', id);
-      await updateDoc(docRef, {
-        name,
-        phone,
-        dough,
-        toppings,
-        extra
-      });
-      navigate('/products');
+    if (currentUser && id) {
+      const userDocRef = doc(db, "products", currentUser.uid);
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists()) {
+        const userProducts = userDoc.data().products || [];
+        userProducts[id] = { name, phone, dough, toppings, extra };
+
+        await updateDoc(userDocRef, {
+          products: userProducts,
+        });
+        navigate("/products");
+      }
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Yükleniyor...</p>;
 
   return (
-    <div>
+    <div className="add-product-container">
       <form onSubmit={handleSave}>
         <input
           type="text"
@@ -78,7 +82,11 @@ function ProductDetail() {
           placeholder="Phone Number"
           required
         />
-        <select value={dough} onChange={(e) => setDough(e.target.value)} required>
+        <select
+          value={dough}
+          onChange={(e) => setDough(e.target.value)}
+          required
+        >
           <option value="">Select Dough</option>
           {doughOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -98,8 +106,13 @@ function ProductDetail() {
           onChange={(e) => setExtra(e.target.value)}
           placeholder="Extra Ingredients"
         />
-        <button type="submit">Save</button>
+        <button className="add-product-button" type="submit">
+          Düzenlemeleri Kaydet
+        </button>
       </form>
+      <Link  to={`/products`} type="submit">
+        İptal
+      </Link>
     </div>
   );
 }

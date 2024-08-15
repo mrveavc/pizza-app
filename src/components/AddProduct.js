@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { db } from "../firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
+import options from "../options.json"; 
 import { MultiSelect } from "react-multi-select-component";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/Auth";
+import InputMask from "react-input-mask";
+
 
 function AddProduct() {
   const [name, setName] = useState("");
@@ -10,32 +14,52 @@ function AddProduct() {
   const [dough, setDough] = useState("");
   const [toppings, setToppings] = useState([]);
   const [extra, setExtra] = useState("");
+  const [error, setError] = useState("");
+  const { doughOptions, toppingOptions } = options;
   const navigate = useNavigate();
+  
+  const { currentUser } = useAuth();
 
-  const doughOptions = [
-    { label: "Thin", value: "thin" },
-    { label: "Thick", value: "thick" },
-  ];
 
-  const toppingOptions = [
-    { label: "Pepperoni", value: "pepperoni" },
-    { label: "Mushrooms", value: "mushrooms" },
-    { label: "Onions", value: "onions" },
-  ];
-
+ 
   const addProduct = async (e) => {
-    await addDoc(collection(db, "products"), {
-      name,
-      phone,
-      dough,
-      toppings,
-      extra,
-    });
-  };
+    e.preventDefault();
 
+    const unmaskedPhone = phone.replace(/\D/g, "");
+    if (unmaskedPhone.length !== 10) {
+      setError("Lütfen geçerli bir telefon numarası girin.");
+      return;
+    }
+
+    if (!currentUser) {
+      setError("Kullanıcı oturum açmamış. Lütfen giriş yapın.");
+      return;
+    }
+
+    const userDocRef = doc(db, "products", currentUser.uid);
+
+    const docSnapshot = await getDoc(userDocRef);
+
+    if (!docSnapshot.exists()) {
+      await setDoc(userDocRef, { products: [] });
+    }
+
+    await updateDoc(userDocRef, {
+      products: arrayUnion({
+        name,
+        phone,
+        dough,
+        toppings,
+        extra,
+      }),
+    });
+
+    navigate("/products");
+  };
   return (
-    <div>
-      <form>
+    <div className="add-product-container">
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <form onSubmit={addProduct}>
         <input
           type="text"
           value={name}
@@ -43,13 +67,23 @@ function AddProduct() {
           placeholder="Pizza Name"
           required
         />
-        <input
-          type="tel"
+       
+          <InputMask
+          mask="(999) 999-9999"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder="Phone Number"
-          required
-        />
+        >
+          {(inputProps) => (
+            <input
+              {...inputProps}
+              type="tel"
+              required
+              placeholder="Telefon Numarası"
+              className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg transition duration-300"
+            />
+          )}
+        </InputMask>
         <select
           value={dough}
           onChange={(e) => setDough(e.target.value)}
@@ -62,7 +96,7 @@ function AddProduct() {
             </option>
           ))}
         </select>
-        <MultiSelect
+        <MultiSelect 
           options={toppingOptions}
           value={toppings}
           onChange={setToppings}
@@ -74,17 +108,20 @@ function AddProduct() {
           onChange={(e) => setExtra(e.target.value)}
           placeholder="Extra Ingredients"
         />
-        <button
-          onClick={() => {
-            addProduct().then(() => {
-              navigate("/products");
-            });
-          }}
-          className="text-sm text-blue-600 underline"
+       
+         <button
+          type="submit"
+          className="add-product-button"
         >
-          Logout
+          Add Product
         </button>
+        
       </form>
+      <Link to={`/products`}
+          type="submit"
+        >
+          İptal
+        </Link>
     </div>
   );
 }

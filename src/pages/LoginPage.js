@@ -8,22 +8,19 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSigningIn, setIsSigningIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!isSigningIn) {
-      setIsSigningIn(true);
       await login(email, password);
-    }
+    
   };
 
   return (
     <div className="container">
       {userLoggedIn && <Navigate to={"/products"} replace={true} />}
       <div className="card">
-        <h2>Login</h2>
+        <h2>Giriş Sayfası</h2>
         <form onSubmit={onSubmit}>
           <input
             type="email"
@@ -49,14 +46,14 @@ const Login = () => {
             <span className="text-red-600 font-bold">{errorMessage}</span>
           )}
 
-          <button disabled={isSigningIn} type="submit">
-            {isSigningIn ? "Signing In..." : "Sign In"}
+          <button className="auth-button" type="submit">
+            "Giriş Yap"
           </button>
         </form>
         <p>
-          Don't have an account?
+          Hesabınız yok mu?
           <Link className="text-sm text-blue-600 underline " to={"/register"}>
-            Register New Account
+            Yeni Hesap Oluştur
           </Link>
         </p>
       </div>

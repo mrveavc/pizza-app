@@ -1,6 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
-import { auth } from '../firebase';
+import { auth ,db} from '../firebase';
 import { onAuthStateChanged } from "firebase/auth";
+import { doc, setDoc } from 'firebase/firestore';
+
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -50,14 +52,21 @@ export function AuthProvider({ children }) {
       console.error("Error signing in:", error);
     }
   };
+
   const register = async (email, password) => {
     try {
-      return createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+  
+      await setDoc(doc(db, "products", user.uid), {
+        products: []  
+      });
+  
+      return userCredential;
     } catch (error) {
       console.error("Error signing in:", error);
     }
   };
-
   const logout = async() => {
     return auth.signOut();
   }

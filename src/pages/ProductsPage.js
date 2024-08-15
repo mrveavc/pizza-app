@@ -2,29 +2,51 @@ import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
 import { Link } from "react-router-dom";
 import { useTheme } from "../components/Theme";
-import "../styles/MultiSelect.css";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { useAuth } from "../contexts/Auth"; 
+import {  getDoc, doc ,updateDoc} from "firebase/firestore";
 
 function ProductsPage() {
   const [products, setProducts] = useState([]);
   const { theme } = useTheme();
+  const { currentUser } = useAuth(); // currentUser'ı aldım
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const querySnapshot = await getDocs(collection(db, "products"));
-      const productsList = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setProducts(productsList);
+      if (!currentUser) {
+        console.error("Oturum açılmadı.");
+        return;
+      }
+
+      const userDocRef = doc(db, "products", currentUser.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists()) {
+        const userProducts = userDoc.data().products || [];
+        setProducts(userProducts);
+      } else {
+        console.error("Kullanıcı ürünü bulunamadı.");
+      }
     };
 
     fetchProducts();
-  }, []);
+  }, [currentUser]);
 
-  const handleDelete = async (id) => {
-    await deleteDoc(doc(db, "products", id));
-    setProducts(products.filter((product) => product.id !== id));
+  const handleDelete = async (index) => {
+    if (!currentUser) return;
+
+    const userDocRef = doc(db, "products", currentUser.uid);
+    const userDoc = await getDoc(userDocRef);
+
+    if (userDoc.exists()) {
+      const userProducts = userDoc.data().products || [];
+      userProducts.splice(index, 1);
+
+      await updateDoc(userDocRef, {
+        products: userProducts,
+      });
+
+      setProducts(userProducts);
+    }
   };
 
   return (
@@ -35,65 +57,33 @@ function ProductsPage() {
 
       <div className="products-list">
         {products.length === 0 ? (
-          <p>No products available.</p>
+          <p>Kullanıcını pizzası bulunamadı</p>
         ) : (
-          products.map((product) => (
-            <div key={product.id} className="product-card">
+          products.map((product, index) => (
+            <div key={index} className="product-card">
               <h2>{product.name}</h2>
               <hr></hr>
-              <p>Phone: {product.phone}</p>
-              <p>Dough: {product.dough}</p>
+              <p>Telefon: {product.phone}</p>
+              <p>Kenar Tipi: {product.dough}</p>
               <p>
-                Toppings:{" "}
+                İçindekiler:{" "}
                 {product.toppings.map((topping) => topping.label).join(", ")}
               </p>
-              <p>Extra: {product.extra}</p>
-              <Link className="edit-button" to={`/productDetail/${product.id}`}>
-                Edit
+              <p>Extra Malzemeler: {product.extra}</p>
+              <Link className="edit-button" to={`/productDetail/${index}`}>
+                Düzenle
               </Link>
               <button
                 className="delete-button"
-                onClick={() => handleDelete(product.id)}
+                onClick={() => handleDelete(index)}
               >
-                Delete
+                Sil
               </button>
             </div>
           ))
         )}
       </div>
-      <style>{`
-        body {
-          background: ${theme === "light" ? "black" : "white"};
-        }
-        .add-product-button {
-          background-color: ${theme === "light" ? "black" : "white"};
-          color: ${theme === "light" ? "white" : "black"};
-        }
-
-       
-
-        .product-card {
-          background-color: ${theme === "light" ? "#f5f5f5" : "#444"};
-          border: 1px solid ${theme === "light" ? "#ddd" : "#666"};
-          
-        }
-
-        .product-card p,
-        .product-card h2 {
-          color: ${theme === "light" ? "black" : "white"};
-        }
-
-       
-        .product-card a {
-          background-color: ${theme === "light" ? "black" : "white"};
-          color: ${theme === "light" ? "white" : "black"};
-        }
-
-        .product-card .delete-button {
-          background-color: ${theme === "light" ? "black" : "white"};
-          color: ${theme === "light" ? "white" : "black"};
-        }
-      `}</style>
+      
     </div>
   );
 }

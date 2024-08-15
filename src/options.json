@@ -1,0 +1,18 @@
+{
+    "doughOptions": [
+        { "label": "İnce", "value": "İnce" },
+        { "label": "Klasik", "value": "Klasik" },
+        { "label": "Kalın", "value": "Kalın" }
+    ],
+    "toppingOptions": [
+        { "label": "Sucuk", "value": "Sucuk" },
+        { "label": "Sosis", "value": "Sosis" },
+        { "label": "Mısır", "value": "Mısır" },
+        { "label": "Mozarella Peynir", "value": "Mozarella Peynir" },
+        { "label": "Pizza Sos", "value": "Pizza Sos" },
+        { "label": "Yeşil Biber", "value": "Yeşil Biber" },
+        { "label": "Mantar", "value": "Mantar" },
+        { "label": "Zeytin", "value": "Zeytin" }
+    ]
+  }
+  

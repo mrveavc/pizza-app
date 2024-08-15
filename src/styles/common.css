@@ -70,16 +70,66 @@ body {
     flex-direction: column;
   }
 
+/*header css*/
+
+.header button {
+ 
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  width: -webkit-fill-available;
+  margin-bottom: 5px;
+
+
+}
+
+
+/*Add Product css*/
+.add-product-container{
+  padding: 50px;
+  background-color: white;
+  border-radius: 10px;
+}
+.add-product-container select{
+      background-color: #eee;
+      border-width: 0;
+      box-sizing: border-box;
+      cursor: pointer;
+      font-size: 15px;
+      line-height: 1em;
+      padding: 10px 10px;
+      width: 100%;
+      margin-bottom: 12px;
+      border-radius: 5px;
+}
+.add-product-container .rmsc{
+   background-color: #eee;
+   border-width: 0;
+   box-sizing: border-box;
+   cursor: pointer;
+   font-size: 15px;
+   line-height: 1em;
+   padding: 10px 10px;
+   width: 100%;
+   margin-bottom: 12px;
+   border-radius: 5px;
+   color: black;
+}
 
 
 
-
-
-
-
-
-
-
+/*login and register css*/
+.auth-button{
+  background-color: #ff8c00; 
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
 
 .container {
     width: 100%;
@@ -116,18 +166,3 @@ body {
   input:focus {
     border-color: #ff8c00; 
   }
-  
-  button {
-    background-color: #ff8c00; 
-    color: #fff;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-  }
-  
-  button:hover {
-    background-color: #ff7f00; 
-  }
-  

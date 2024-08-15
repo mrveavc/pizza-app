@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from 'firebase/firestore';
 
+
 const firebaseConfig = {
   apiKey: "AIzaSyAd0Zz19zIq4XuMXUKC8hG7Vr337UwP_Fs",
   authDomain: "pizza-app-e0709.firebaseapp.com",
