@@ -1,4 +1,3 @@
-// src/components/ThemeSwitcher.js
 import React from 'react';
 import { useTheme } from '../components/Theme';
 

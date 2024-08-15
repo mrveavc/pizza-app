@@ -8,7 +8,7 @@ import {  getDoc, doc ,updateDoc} from "firebase/firestore";
 function ProductsPage() {
   const [products, setProducts] = useState([]);
   const { theme } = useTheme();
-  const { currentUser } = useAuth(); // currentUser'ı aldım
+  const { currentUser } = useAuth(); 
 
   useEffect(() => {
     const fetchProducts = async () => {
