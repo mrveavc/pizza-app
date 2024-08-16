@@ -2,14 +2,14 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
+// Firebase yapılandırma bilgilerini .env dosyasından al
 const firebaseConfig = {
-  
-  apiKey: "AIzaSyAd0Zz19zIq4XuMXUKC8hG7Vr337UwP_Fs",
-  authDomain: "pizza-app-e0709.firebaseapp.com",
-  projectId: "pizza-app-e0709",
-  storageBucket: "pizza-app-e0709.appspot.com",
-  messagingSenderId: "458761700059",
-  appId: "1:458761700059:web:d59bfe862c20d3e41082fe"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
